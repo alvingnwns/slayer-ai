@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <title>Nichirin AR — Breathing Style Katana</title>
+  <meta name="description" content="Unofficial fan-made Demon Slayer-inspired AR katana controlled by your hand through the webcam. Runs entirely in your browser." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0c10'/%3E%3Cpath d='M9 24 L22 7' stroke='%23ff6a2b' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M8 21 L11 24' stroke='%23c9a24a' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <canvas id="gl" aria-label="Katana scene"></canvas>
+
+  <div id="hud" hidden>
+    <header class="brand">
+      <div class="brand-mark">NICHIRIN <span>AR</span></div>
+      <div class="brand-sub">Unofficial fan project · runs locally in your browser</div>
+    </header>
+
+    <aside class="cam" id="cam">
+      <div class="cam-frame">
+        <video id="preview" playsinline muted></video>
+        <canvas id="overlay"></canvas>
+        <div class="cam-empty" id="camEmpty">Camera off</div>
+      </div>
+      <div class="cam-row">
+        <span class="chip" id="camChip" data-s="off">Camera off</span>
+        <button class="btn sm" id="btnCam" type="button">Enable camera</button>
+      </div>
+      <div class="meter" title="Fist confidence — the sword draws when this passes the marker">
+        <div class="meter-fill" id="fistFill"></div>
+        <div class="meter-mark" id="fistMark"></div>
+        <span class="meter-label">FIST</span>
+      </div>
+      <p class="cam-msg" id="camMsg"></p>
+    </aside>
+
+    <section class="state" id="stateBox" aria-live="polite">
+      <div class="state-title" id="stateTitle">Close your fist to draw your blade</div>
+      <div class="state-sub" id="stateSub"></div>
+      <div class="palm-ring" id="palmRing" hidden><i></i></div>
+    </section>
+
+    <nav class="styles" id="styles" aria-label="Breathing Style"></nav>
+
+    <div class="tools">
+      <button class="btn icon" id="btnHelp" type="button" aria-label="Controls help" title="Controls (?)">?</button>
+      <button class="btn icon" id="btnMute" type="button" aria-label="Mute" title="Mute (M)">♪</button>
+      <button class="btn icon" id="btnGear" type="button" aria-label="Settings" title="Settings (S)">⚙</button>
+    </div>
+
+    <div class="debug" id="debug" hidden></div>
+    <div class="toast" id="toast" role="status"></div>
+  </div>
+
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <h2>Settings</h2>
+      <button class="btn icon" id="btnCloseDrawer" type="button" aria-label="Close settings">✕</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+
+  <aside class="help" id="help" hidden>
+    <div class="help-card">
+      <h2>Controls</h2>
+      <div class="help-cols">
+        <div>
+          <h3>Hand gestures</h3>
+          <ul>
+            <li><b>Close your fist</b> — draw the katana</li>
+            <li><b>Hold still</b> — charge the Breathing Style</li>
+            <li><b>Swing fast</b> — unleash the attack</li>
+            <li><b>Open your hand</b> — sheathe (Hold mode) · or hold an open palm ~2 s (Latch mode)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Mouse &amp; keyboard</h3>
+          <ul>
+            <li><b>Move mouse</b> — move the sword; <b>drag</b> or <kbd>F</kbd> — grip / draw</li>
+            <li><kbd>1</kbd>–<kbd>4</kbd> / <kbd>Tab</kbd> — Breathing Style</li>
+            <li><kbd>Space</kbd> hold to charge, release to attack · right-click attack</li>
+            <li><kbd>X</kbd> sheathe · <kbd>Q</kbd>/<kbd>E</kbd> rotate · <kbd>C</kbd> calibrate angle</li>
+            <li><kbd>B</kbd> camera background · <kbd>M</kbd> mute · <kbd>D</kbd> debug · <kbd>S</kbd> settings</li>
+          </ul>
+        </div>
+      </div>
+      <button class="btn" id="btnCloseHelp" type="button">Got it</button>
+    </div>
+  </aside>
+
+  <main class="start" id="start">
+    <div class="start-card">
+      <div class="start-kicker">Unofficial fan-made demo</div>
+      <h1>Nichirin <span>AR</span></h1>
+      <p class="lead">Hold a Demon Slayer-inspired katana with your own hand and awaken four Breathing Styles — Flame, Water, Insect and Thunder.</p>
+
+      <div class="privacy">
+        <strong>About the camera</strong>
+        <p>Hand tracking runs <b>entirely on your device</b> in this browser tab. Camera frames are never recorded, stored or uploaded. Your browser will ask for permission; you can switch the camera off at any time.</p>
+      </div>
+
+      <div class="start-actions">
+        <button class="btn primary" id="btnStartCam" type="button">Enable camera &amp; start</button>
+        <button class="btn" id="btnStartMouse" type="button">Use mouse &amp; keyboard</button>
+      </div>
+      <p class="start-note" id="startNote"></p>
+      <p class="fine">Tip: face a light source, keep your hand inside the frame and about an arm's length from the camera.</p>
+    </div>
+  </main>
+
+  <noscript><p style="color:#fff;padding:2rem">This experience needs JavaScript and WebGL.</p></noscript>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
